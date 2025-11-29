@@ -1,0 +1,7 @@
+{
+  "name": "UCCAI",
+  "description": "A sophisticated, ChatGPT-like AI chatbot powered by Google's Gemini 2.5 Flash model.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
