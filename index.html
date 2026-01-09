@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UCCAI - Universal Creative Chat AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              gray: {
+                750: '#2d3748',
+                850: '#1a202c',
+                950: '#0d1117',
+              }
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for webkit */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #9ca3af;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #4b5563;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+      }
+      
+      /* Markdown Styles - Light Mode Default */
+      .markdown-body pre {
+        background-color: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        border: 1px solid #e5e7eb;
+      }
+      .markdown-body code {
+        font-family: 'JetBrains Mono', monospace;
+        background-color: rgba(0,0,0,0.05);
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+        color: #111827;
+      }
+      .markdown-body pre code {
+        background-color: transparent;
+        padding: 0;
+        color: inherit;
+        border: none;
+      }
+      .markdown-body p {
+        margin-bottom: 1em;
+        line-height: 1.6;
+        color: #374151;
+      }
+      .markdown-body ul {
+        list-style-type: disc;
+        padding-left: 1.5em;
+        margin-bottom: 1em;
+        color: #374151;
+      }
+      .markdown-body ol {
+        list-style-type: decimal;
+        padding-left: 1.5em;
+        margin-bottom: 1em;
+        color: #374151;
+      }
+      .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+        color: #111827;
+      }
+      .markdown-body h1 { font-size: 1.5em; }
+      .markdown-body h2 { font-size: 1.25em; }
+      .markdown-body h3 { font-size: 1.1em; }
+      .markdown-body a {
+        color: #2563eb;
+        text-decoration: underline;
+      }
+      .markdown-body blockquote {
+        border-left: 4px solid #e5e7eb;
+        padding-left: 1rem;
+        color: #6b7280;
+        margin: 1rem 0;
+      }
+      .markdown-body strong {
+        color: #111827;
+        font-weight: 600;
+      }
+
+      /* Markdown Styles - Dark Mode Overrides */
+      .dark .markdown-body pre {
+        background-color: #1e293b;
+        border-color: #374151;
+      }
+      .dark .markdown-body code {
+        background-color: rgba(255,255,255,0.1);
+        color: #e5e7eb;
+      }
+      .dark .markdown-body pre code {
+        background-color: transparent;
+        color: inherit;
+      }
+      .dark .markdown-body p, 
+      .dark .markdown-body ul, 
+      .dark .markdown-body ol {
+        color: #d1d5db;
+      }
+      .dark .markdown-body h1, 
+      .dark .markdown-body h2, 
+      .dark .markdown-body h3,
+      .dark .markdown-body strong {
+        color: #f3f4f6;
+      }
+      .dark .markdown-body a {
+        color: #60a5fa;
+      }
+      .dark .markdown-body blockquote {
+        border-color: #4b5563;
+        color: #9ca3af;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.1",
+    "uuid": "https://esm.sh/uuid@^13.0.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased overflow-hidden selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
