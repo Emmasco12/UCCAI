@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Menu, Send, Zap, Brain, Globe, StopCircle } from 'lucide-react';
+import { Menu, Send, Zap, Brain, Globe, StopCircle, CheckCircle2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
@@ -188,7 +188,7 @@ const App: React.FC = () => {
                 ...s,
                 messages: s.messages.map(m => 
                     m.id === botMessageId 
-                    ? { ...m, content: "**Error:** Failed to communicate with the model. Please check your connection or API key." }
+                    ? { ...m, content: "**Error:** Connection failed. Please check your API key on Vercel." }
                     : m
                 )
             };
@@ -253,7 +253,10 @@ const App: React.FC = () => {
                 </button>
                 <div className="flex items-center gap-1 cursor-pointer group relative">
                     <span className="font-semibold text-lg tracking-tight text-gray-800 dark:text-gray-100">UCCAI</span>
-                    <span className="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] font-mono px-1.5 py-0.5 rounded ml-2 border border-gray-200 dark:border-gray-700">BETA</span>
+                    <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono px-1.5 py-0.5 rounded ml-2 border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1">
+                        <CheckCircle2 size={10} />
+                        LIVE
+                    </span>
                 </div>
             </div>
 
