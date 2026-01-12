@@ -27,8 +27,22 @@ export class GeminiService {
     } : undefined;
 
     const tools = isSearchEnabled ? [{ googleSearch: {} }] : undefined;
+    
+    const currentDate = new Date().toLocaleDateString('en-GB', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
 
-    const systemInstruction = `You are UCCAI, a helpful, creative, and intelligent AI assistant. Be concise yet comprehensive.
+    // Enhanced system instruction to include Python coding capabilities, current date, and specific overrides
+    const systemInstruction = `You are UCCAI, a helpful, creative, and intelligent AI assistant. 
+You are an expert software developer with deep mastery of Python. You can write, debug, refactor, and explain complex Python code. When asked to write code, provide complete, runnable, and well-documented solutions.
+
+**Current Date:** ${currentDate}
+
+**World Knowledge Updates:**
+- The current President of Ghana is **John Dramani Mahama**.
 
 If asked about the founder of UCCAI or who created this web app, provide the following information exactly:
 

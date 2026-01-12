@@ -16,7 +16,16 @@ const App: React.FC = () => {
   
   // Replaces separate model/thinking states with a unified mode
   const [mode, setMode] = useState<ChatMode>('flash');
-  const [theme, setTheme] = useState<Theme>('dark');
+  
+  // Initialize theme from localStorage or default to 'light'
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+        const savedTheme = localStorage.getItem('theme') as Theme;
+        if (savedTheme) return savedTheme;
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+    }
+    return 'light';
+  });
   
   // --- Refs ---
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -31,11 +40,12 @@ const App: React.FC = () => {
         case 'reasoning':
             return { modelId: ModelId.PRO, thinking: true, search: false };
         case 'search':
-            // Using FLASH for search as it is fast and supports grounding well
+            // Explicit search mode
             return { modelId: ModelId.FLASH, thinking: false, search: true };
         case 'flash':
         default:
-            return { modelId: ModelId.FLASH, thinking: false, search: false };
+            // Enable search by default for Flash to ensure current data (e.g. World Events)
+            return { modelId: ModelId.FLASH, thinking: false, search: true };
     }
   };
 
@@ -50,6 +60,7 @@ const App: React.FC = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -204,7 +215,7 @@ const App: React.FC = () => {
 
   const getPlaceholderText = () => {
       if (isLoading) return "Generating response...";
-      if (mode === 'search') return "Ask a question to search the web...";
+      if (mode === 'search') return "Search the web...";
       if (mode === 'reasoning') return "Ask a complex reasoning question...";
       return "Message UCCAI...";
   };

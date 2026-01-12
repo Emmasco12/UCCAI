@@ -70,10 +70,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading, modelId, onPro
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl w-full">
             {[
-                "Who won the last Super Bowl?",
-                "Analyze the latest trends in AI",
-                "Write a Python script to scrape a website",
-                "Explain quantum computing to a 5-year old"
+                "Write a Python script to analyze data",
+                "Explain how to use Python decorators",
+                "Create a simple Flask API in Python",
+                "Debug this Python list comprehension code"
             ].map((prompt, i) => (
                 <button 
                     key={i} 
