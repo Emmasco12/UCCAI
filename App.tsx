@@ -183,11 +183,21 @@ const App: React.FC = () => {
     } catch (error: any) {
         console.error("Failed to generate response", error);
         
-        // Improve error messaging for API key issues
-        let errorMessage = "**Error:** Connection failed. Please check your internet or API limits.";
-        
-        if (error.message && (error.message.includes("API Key") || error.message.includes("API_KEY"))) {
-             errorMessage = "**Configuration Error:** " + error.message;
+        let errorMessage = "**Connection Error:** Something went wrong.";
+
+        if (error.message === 'MISSING_API_KEY') {
+            errorMessage = `**Vercel Configuration Required:**
+            
+To fix this:
+1. Go to your **Vercel Project Settings**.
+2. Click **Environment Variables**.
+3. Edit \`GEMINI_API_KEY\` and rename it to **\`NEXT_PUBLIC_GEMINI_API_KEY\`** (or \`VITE_GEMINI_API_KEY\`).
+4. **Redeploy** your project for changes to take effect.
+            `;
+        } else if (error.message.includes("403")) {
+             errorMessage = "**API Error (403):** The API Key is invalid or has expired.";
+        } else if (error.message) {
+            errorMessage = `**Error:** ${error.message}`;
         }
 
         setSessions(prev => prev.map(s => {

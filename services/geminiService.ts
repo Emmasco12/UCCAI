@@ -5,31 +5,35 @@ import { ModelId, GroundingMetadata } from "../types";
 const getAIInstance = () => {
   let apiKey: string | undefined = undefined;
 
-  // 1. Try standard process.env (Node, Webpack, CRA, Next.js)
-  if (typeof process !== 'undefined' && process.env) {
-    apiKey = process.env.GEMINI_API_KEY || 
-             process.env.API_KEY || 
-             process.env.REACT_APP_GEMINI_API_KEY || 
-             process.env.NEXT_PUBLIC_GEMINI_API_KEY || 
-             process.env.VITE_GEMINI_API_KEY;
+  // 1. Try safe process.env access (Standard, Next.js, CRA)
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      apiKey = process.env.GEMINI_API_KEY || 
+               process.env.NEXT_PUBLIC_GEMINI_API_KEY || 
+               process.env.VITE_GEMINI_API_KEY || 
+               process.env.REACT_APP_GEMINI_API_KEY || 
+               process.env.API_KEY ||
+               process.env.NEXT_PUBLIC_API_KEY;
+    }
+  } catch (e) {
+    // Ignore reference errors
   }
 
-  // 2. Try Vite's import.meta.env (if process.env failed or isn't available)
+  // 2. Try safe import.meta.env access (Vite)
   if (!apiKey) {
     try {
         // @ts-ignore
         if (typeof import.meta !== 'undefined' && import.meta.env) {
             // @ts-ignore
-            apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+            apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || import.meta.env.VITE_API_KEY;
         }
     } catch (e) {
-        // Ignore if import.meta is not supported in the current environment
+        // Ignore if import.meta is not supported
     }
   }
   
   if (!apiKey) {
-    console.error("GEMINI_API_KEY is missing. Checked: process.env and import.meta.env with common prefixes (VITE_, REACT_APP_, NEXT_PUBLIC_).");
-    throw new Error("API Key is missing. Please add GEMINI_API_KEY to your Vercel Environment Variables.");
+    throw new Error("MISSING_API_KEY");
   }
   return new GoogleGenAI({ apiKey: apiKey });
 };
@@ -59,7 +63,6 @@ export class GeminiService {
       day: 'numeric' 
     });
 
-    // Production-ready system instruction with strict overrides and persona definition
     const systemInstruction = `You are UCCAI (Universal Creative Chat AI), a sophisticated, helpful, and intelligent AI assistant.
 
 **Core Identity & Capabilities:**
