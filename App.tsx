@@ -180,15 +180,23 @@ const App: React.FC = () => {
             }));
         }
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Failed to generate response", error);
+        
+        // Improve error messaging for API key issues
+        let errorMessage = "**Error:** Connection failed. Please check your internet or API limits.";
+        
+        if (error.message && (error.message.includes("API Key") || error.message.includes("API_KEY"))) {
+             errorMessage = "**Configuration Error:** " + error.message;
+        }
+
         setSessions(prev => prev.map(s => {
             if (s.id !== session!.id) return s;
             return {
                 ...s,
                 messages: s.messages.map(m => 
                     m.id === botMessageId 
-                    ? { ...m, content: "**Error:** Connection failed. Please check your API key on Vercel." }
+                    ? { ...m, content: errorMessage }
                     : m
                 )
             };

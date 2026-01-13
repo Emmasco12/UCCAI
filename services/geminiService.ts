@@ -3,12 +3,33 @@ import { ModelId, GroundingMetadata } from "../types";
 
 // Helper to get the AI instance
 const getAIInstance = () => {
-  // Prioritize GEMINI_API_KEY as configured in Vercel, fallback to API_KEY if needed
-  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+  let apiKey: string | undefined = undefined;
+
+  // 1. Try standard process.env (Node, Webpack, CRA, Next.js)
+  if (typeof process !== 'undefined' && process.env) {
+    apiKey = process.env.GEMINI_API_KEY || 
+             process.env.API_KEY || 
+             process.env.REACT_APP_GEMINI_API_KEY || 
+             process.env.NEXT_PUBLIC_GEMINI_API_KEY || 
+             process.env.VITE_GEMINI_API_KEY;
+  }
+
+  // 2. Try Vite's import.meta.env (if process.env failed or isn't available)
+  if (!apiKey) {
+    try {
+        // @ts-ignore
+        if (typeof import.meta !== 'undefined' && import.meta.env) {
+            // @ts-ignore
+            apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+        }
+    } catch (e) {
+        // Ignore if import.meta is not supported in the current environment
+    }
+  }
   
   if (!apiKey) {
-    console.error("GEMINI_API_KEY is missing in process.env");
-    throw new Error("API Key is missing. Please check your Vercel configuration for GEMINI_API_KEY.");
+    console.error("GEMINI_API_KEY is missing. Checked: process.env and import.meta.env with common prefixes (VITE_, REACT_APP_, NEXT_PUBLIC_).");
+    throw new Error("API Key is missing. Please add GEMINI_API_KEY to your Vercel Environment Variables.");
   }
   return new GoogleGenAI({ apiKey: apiKey });
 };
