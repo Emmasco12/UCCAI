@@ -3,11 +3,14 @@ import { ModelId, GroundingMetadata } from "../types";
 
 // Helper to get the AI instance
 const getAIInstance = () => {
-  if (!process.env.API_KEY) {
-    console.error("API_KEY is missing in process.env");
-    throw new Error("API Key is missing. Please check your configuration.");
+  // Prioritize GEMINI_API_KEY as configured in Vercel, fallback to API_KEY if needed
+  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+  
+  if (!apiKey) {
+    console.error("GEMINI_API_KEY is missing in process.env");
+    throw new Error("API Key is missing. Please check your Vercel configuration for GEMINI_API_KEY.");
   }
-  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+  return new GoogleGenAI({ apiKey: apiKey });
 };
 
 export interface StreamUpdate {
