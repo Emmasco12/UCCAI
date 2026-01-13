@@ -186,16 +186,18 @@ const App: React.FC = () => {
         let errorMessage = "**Connection Error:** Something went wrong.";
 
         if (error.message === 'MISSING_API_KEY') {
-            errorMessage = `**Vercel Configuration Required:**
-            
-To fix this:
-1. Go to your **Vercel Project Settings**.
-2. Click **Environment Variables**.
-3. Edit \`GEMINI_API_KEY\` and rename it to **\`NEXT_PUBLIC_GEMINI_API_KEY\`** (or \`VITE_GEMINI_API_KEY\`).
-4. **Redeploy** your project for changes to take effect.
+            errorMessage = `**Configuration Error: API Key Not Found**
+
+The app cannot see your API Key. This is a common Vercel security feature for client-side apps.
+
+**How to Fix:**
+1. Go to **Vercel Dashboard** > **Settings** > **Environment Variables**.
+2. Find your API Key.
+3. Rename it to **\`NEXT_PUBLIC_GEMINI_API_KEY\`** (recommended) or **\`VITE_GEMINI_API_KEY\`**.
+4. **Redeploy** your project. (Just renaming isn't enough; the app must be rebuilt).
             `;
         } else if (error.message.includes("403")) {
-             errorMessage = "**API Error (403):** The API Key is invalid or has expired.";
+             errorMessage = "**API Error (403):** The API Key is invalid. Check if there are extra spaces in the key.";
         } else if (error.message) {
             errorMessage = `**Error:** ${error.message}`;
         }

@@ -3,12 +3,12 @@ import { ModelId, GroundingMetadata } from "../types";
 
 // Helper to get the AI instance
 const getAIInstance = () => {
-  let apiKey: string | undefined = undefined;
+  let rawKey: string | undefined = undefined;
 
   // 1. Try safe process.env access (Standard, Next.js, CRA)
   try {
     if (typeof process !== 'undefined' && process.env) {
-      apiKey = process.env.GEMINI_API_KEY || 
+      rawKey = process.env.GEMINI_API_KEY || 
                process.env.NEXT_PUBLIC_GEMINI_API_KEY || 
                process.env.VITE_GEMINI_API_KEY || 
                process.env.REACT_APP_GEMINI_API_KEY || 
@@ -20,21 +20,27 @@ const getAIInstance = () => {
   }
 
   // 2. Try safe import.meta.env access (Vite)
-  if (!apiKey) {
+  if (!rawKey) {
     try {
         // @ts-ignore
         if (typeof import.meta !== 'undefined' && import.meta.env) {
             // @ts-ignore
-            apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || import.meta.env.VITE_API_KEY;
+            rawKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || import.meta.env.VITE_API_KEY;
         }
     } catch (e) {
         // Ignore if import.meta is not supported
     }
   }
   
-  if (!apiKey) {
+  if (!rawKey) {
+    console.warn("[UCCAI] API Key not found in process.env or import.meta.env");
     throw new Error("MISSING_API_KEY");
   }
+
+  // Trim whitespace to prevent common copy-paste errors
+  const apiKey = rawKey.trim();
+  console.log("[UCCAI] API Key detected and configured.");
+  
   return new GoogleGenAI({ apiKey: apiKey });
 };
 
