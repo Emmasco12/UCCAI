@@ -186,15 +186,20 @@ const App: React.FC = () => {
         let errorMessage = "**Connection Error:** Something went wrong.";
 
         if (error.message === 'MISSING_API_KEY') {
-            errorMessage = `**Configuration Error: API Key Not Found**
+            errorMessage = `**Configuration Required**
 
-The app cannot see your API Key. This is a common Vercel security feature for client-side apps.
+The app cannot see your Gemini API Key.
 
-**How to Fix:**
-1. Go to **Vercel Dashboard** > **Settings** > **Environment Variables**.
-2. Find your API Key.
-3. Rename it to **\`NEXT_PUBLIC_GEMINI_API_KEY\`** (recommended) or **\`VITE_GEMINI_API_KEY\`**.
-4. **Redeploy** your project. (Just renaming isn't enough; the app must be rebuilt).
+**For Netlify Users:**
+1. Go to **Site settings** > **Environment variables**.
+2. Add a new variable named **\`VITE_GEMINI_API_KEY\`**.
+3. Paste your key as the value (do not add quotes).
+4. **Trigger a new deploy** (Deployments > Trigger deploy) for changes to take effect.
+
+**For Vercel Users:**
+1. Go to **Settings** > **Environment Variables**.
+2. Add **\`NEXT_PUBLIC_GEMINI_API_KEY\`**.
+3. **Redeploy** the project.
             `;
         } else if (error.message.includes("403")) {
              errorMessage = "**API Error (403):** The API Key is invalid. Check if there are extra spaces in the key.";

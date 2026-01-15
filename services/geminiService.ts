@@ -5,13 +5,23 @@ import { ModelId, GroundingMetadata } from "../types";
 const getAIInstance = () => {
   let rawKey: string | undefined = undefined;
 
-  // 1. Try safe process.env access (Standard, Next.js, CRA)
+  // Debug: Check which keys are visible to the browser
+  // This helps troubleshoot deployments on Vercel, Netlify, etc.
+  if (typeof process !== 'undefined' && process.env) {
+      if (process.env.NEXT_PUBLIC_GEMINI_API_KEY) console.log("[UCCAI Debug] Found: NEXT_PUBLIC_GEMINI_API_KEY");
+      if (process.env.VITE_GEMINI_API_KEY) console.log("[UCCAI Debug] Found: VITE_GEMINI_API_KEY");
+      if (process.env.REACT_APP_GEMINI_API_KEY) console.log("[UCCAI Debug] Found: REACT_APP_GEMINI_API_KEY");
+      if (process.env.GEMINI_API_KEY) console.log("[UCCAI Debug] Found: GEMINI_API_KEY");
+  }
+
+  // 1. Try safe process.env access
+  // Covers: Next.js (NEXT_PUBLIC_), Create React App (REACT_APP_), and some Vite configs
   try {
     if (typeof process !== 'undefined' && process.env) {
-      rawKey = process.env.GEMINI_API_KEY || 
-               process.env.NEXT_PUBLIC_GEMINI_API_KEY || 
-               process.env.VITE_GEMINI_API_KEY || 
-               process.env.REACT_APP_GEMINI_API_KEY || 
+      rawKey = process.env.VITE_GEMINI_API_KEY || // Netlify + Vite standard
+               process.env.NEXT_PUBLIC_GEMINI_API_KEY || // Vercel + Next.js standard
+               process.env.REACT_APP_GEMINI_API_KEY || // CRA standard
+               process.env.GEMINI_API_KEY || 
                process.env.API_KEY ||
                process.env.NEXT_PUBLIC_API_KEY;
     }
@@ -19,7 +29,7 @@ const getAIInstance = () => {
     // Ignore reference errors
   }
 
-  // 2. Try safe import.meta.env access (Vite)
+  // 2. Try safe import.meta.env access (Vite standard)
   if (!rawKey) {
     try {
         // @ts-ignore
@@ -37,9 +47,8 @@ const getAIInstance = () => {
     throw new Error("MISSING_API_KEY");
   }
 
-  // Trim whitespace to prevent common copy-paste errors
-  const apiKey = rawKey.trim();
-  console.log("[UCCAI] API Key detected and configured.");
+  // Clean the key: trim whitespace and remove surrounding quotes if user added them by mistake
+  const apiKey = rawKey.trim().replace(/^['"]|['"]$/g, '');
   
   return new GoogleGenAI({ apiKey: apiKey });
 };
